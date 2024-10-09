@@ -1,39 +1,38 @@
-import { useState } from "react";
-import republican from "./republican.png";
-import democratic from "./democratic.png";
-import american from "./american.png";
-import Ballot from "./components/ballot";
-import ElectionResults from "./components/ElectionResults";
-import NoElectionResults from "./components/NoElectionResults";
-import "./App.css";
-
-
-
-
-
-
-
+import { useState } from "react"
+import jokes from "./components/jokes"
 const App = () => {
+  const [counter, setCounter] = useState(jokes);
+  const [newJoke, setNewJoke] = useState(0);
+  const setRandomJoke = () => {
+    let randomNumber = Math.floor(Math.random() * 9) + 1;
+    setNewJoke(randomNumber)
+  }
+  const increasingLikes = (index) => {
+    const updatedJokes = counter.map((joke, i) => {
+        if(i === index){
+          return{...joke, likes: joke.likes + 1};
+        }
+      return joke;
+    });
+    setCounter(updatedJokes);
+  }
 
-  const [counter, setCounter] = useState(0);
-  const [counter1, setCounter1] = useState(0);
-  const [counter2, setCounter2] = useState(0);
-  const totalVotes = counter1 + counter + counter2;
+  let mostLikes = counter.reduce((first, second) => (first.likes > second.likes ? first:second));
+
   return (
     <div>
-      <Ballot counter={counter} setCounter={setCounter} counter1={counter1} setCounter1={setCounter1} counter2={counter2} setCounter2={setCounter2} />
-      {totalVotes > 0 && (
-        <ElectionResults counter={counter} counter1={counter1} counter2={counter2} />
-      )} <br />
-      {totalVotes === 0 && (
-        <NoElectionResults/>
-      )}
-    </div>  
-    )
-    
+      <h1>Javascript Jokes</h1>
+      {jokes[newJoke].joke}
+      <br /> <br />
+      <button onClick={setRandomJoke}>Next Joke</button>
+      <br /><br />
+      <button onClick={() => increasingLikes(newJoke)}>Likes: {counter[newJoke].likes}</button>
+      <br /> <br />
+      <h1>Most Liked JS Jokes</h1>
+      <p>{mostLikes.joke} <span style={{color:'red'}}> with {mostLikes.likes} likes. </span> </p>
 
-  
+    </div>
+  )
+}
 
-};
-
-export default App;
+export default App
